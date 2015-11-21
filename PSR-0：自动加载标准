@@ -1,0 +1,52 @@
+不推荐使用 -作为2014年10月21日PSR-0已被标记为过时。PSR-4，现在推荐作为替代。
+下面介绍的强制性要求，必须坚持为自动加载机的互操作性。
+
+强制性
+
+一个完全合格的命名空间和类必须具有以下结构\ <供应商名称> \（<命名空间> \）* <类名>
+每个命名空间必须有一个顶层名字空间（“供应商名称”）。
+每个命名空间可以有很多子命名空间，因为它的愿望。
+每个命名空间分隔转换为DIRECTORY_SEPARATOR从文件系统加载时。
+每个_在类名字符转换为 DIRECTORY_SEPARATOR。该_字符在命名空间没有任何特殊含义。
+完全限定的命名空间和类后缀的.php从文件系统加载的时候。
+在供应商名称，命名空间和类名字母的字符可以是小写和大写字母的任意组合。
+示例
+
+\Doctrine\Common\IsolatedClassLoader => /path/to/project/lib/vendor/Doctrine/Common/IsolatedClassLoader.php
+\ Symfony的​​\核心\请求 => /path/to/project/lib/vendor/Symfony/Core/Request.php
+\ Zend的\的Acl => /path/to/project/lib/vendor/Zend/Acl.php
+\ Zend的\邮件\留言 => /path/to/project/lib/vendor/Zend/Mail/Message.php
+凸显了命名空间和类名
+
+\命名空间\包\ CLASS_NAME => /path/to/project/lib/vendor/namespace/package/Class/Name.php
+\namespace\package_name\Class_Name => /path/to/project/lib/vendor/namespace/package_name/Class/Name.php
+我们在这里设置的标准应该是最小公分母无痛自动加载机的互操作性。您可以测试您遵循这些标准，利用这个样本SplClassLoader实现，它能够装载PHP 5.3类。
+
+示例实现
+
+下面是一个例子功能简单地演示如何上面提出的标准自动加载。
+
+<？php的
+
+function  autoload ( $className ) 
+{ 
+    $className  =  ltrim ( $className ,  '\\' ); 
+    $fileName   =  '' ; 
+    $namespace  =  '' ; 
+    if  ( $lastNsPos  =  strrpos ( $className ,  '\\' ))  { 
+        $namespace  =  substr ( $className ,  0 ,  $lastNsPos ); 
+        $className  =  substr ( $className ,  $lastNsPos  +  1 ); 
+        $fileName   =  str_replace ( '\\' ,  DIRECTORY_SEPARATOR ,  $namespace )  .  DIRECTORY_SEPARATOR ; 
+    } 
+    $fileName  .=  str_replace ( '_' ,  DIRECTORY_SEPARATOR ,  $className )  .  '.php' ;
+
+    需要 $文件名
+​​;} 
+spl_autoload_register（' 自动加载'）;
+SplClassLoader实施
+
+下面的要点是样本SplClassLoader实现，可加载类，如果你按照上面提出的磁带自动加载机互操作性标准。这是目前推荐的方式来加载PHP 5.3类遵循这些标准的。
+
+http://gist.github.com/221634
+
+引用地址：http://www.php-fig.org/psr/psr-0/
